@@ -1,5 +1,5 @@
 {
-  "name": "riichi",
+  "name": "riichi_hinabuild",
   "version": "1.2.0",
   "description": "Japanese riichi mahjong hand calculation",
   "main": "index.js",
@@ -9,22 +9,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/takayama-lily/riichi.git"
+    "url": "git+https://github.com/HinanoAira/riichi.git"
   },
-  "keywords": [
-    "riichi",
-    "mahjong",
-    "syanten",
-    "hairi"
-  ],
-  "author": "takayama <takayama@foxmail.com>",
+  "author": "雛野綾桜 <islakioriy@gmail.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/takayama-lily/riichi/issues"
-  },
-  "homepage": "https://github.com/takayama-lily/riichi#readme",
-  "dependencies": {
-    "agari": "^1.1.0",
-    "syanten": "^1.5.0"
-  }
+  "homepage": "https://github.com/HinanoAira/riichi#readme"
 }

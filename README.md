@@ -12,9 +12,9 @@ $ npm i riichi
 ## Usage
 
 ```js
-const Riichi = require('riichi')
-const riichi = new Riichi('112233456789m11s')
-console.log(riichi.calc())
+const Riichi = require("riichi");
+const riichi = new Riichi("112233456789m11s");
+console.log(riichi.calc());
 ```
 
 Output:
@@ -37,43 +37,43 @@ Output:
 
 "m,p,s,z" means "萬子,筒子,索子,字牌"  
 "1z-7z" means "東南西北白發中"
-"0m" means "赤5萬"
+"0m" means "赤 5 萬"
 
 **自摸 & 栄和:**
 
 ```js
-new Riichi('112233456789m1s1s') //自摸
-new Riichi('112233456789m1s+1s') //栄和
+new Riichi("112233456789m1s1s"); //自摸
+new Riichi("112233456789m1s+1s"); //栄和
 ```
 
 **副露:**
 
 ```js
-new Riichi('1s+1s+123m55z666z7777z') //副露:123m順子 5z暗槓 6z明刻 7z明槓
+new Riichi("1s+1s+123m55z666z7777z"); //副露:123m順子 5z暗槓 6z明刻 7z明槓
 ```
 
 **Dora:**
 
 ```js
-new Riichi('112233456789m1s1s+d12s') //Dora: 1s 2s
+new Riichi("112233456789m1s1s+d12s"); //Dora: 1s 2s
 ```
 
 **Extra Option:**
 
 ```js
-new Riichi('1s+1s+123m55z666z7777z+d12s+trihk22') //Extra:trihk22
+new Riichi("1s+1s+123m55z666z7777z+d12s+trihk22"); //Extra:trihk22
 ```
 
-| Option | Meaning |
-| --- | --- |
-| t | 天和/地和/人和 |
-| r(l) | 立直 |
-| i(y) | 一発 |
-| w | w立直 |
-| h | 海底摸月/河底撈魚 |
-| k | 槍槓/嶺上開花 |
-| o | 全local役有効 |
-| 22 | 場風南自風南 |
+| Option | Meaning           |
+| ------ | ----------------- |
+| t      | 天和/地和/人和    |
+| r(l)   | 立直              |
+| i(y)   | 一発              |
+| w      | w 立直            |
+| h      | 海底摸月/河底撈魚 |
+| k      | 槍槓/嶺上開花     |
+| o      | 全 local 役有効   |
+| 22     | 場風南自風南      |
 
 **場風自風:**
 
@@ -81,16 +81,16 @@ new Riichi('1s+1s+123m55z666z7777z+d12s+trihk22') //Extra:trihk22
 default: 場風東自風南
 
 ```js
-new Riichi('112233456789m1s1s+1') //(場風東)自風東
-new Riichi('112233456789m1s1s+21') //場風南自風東
-new Riichi('112233456789m1s1s+24') //場風南自風北
+new Riichi("112233456789m1s1s+1"); //(場風東)自風東
+new Riichi("112233456789m1s1s+21"); //場風南自風東
+new Riichi("112233456789m1s1s+24"); //場風南自風北
 ```
 
 **local yaku list:**
 | Name | 飜数 |
 | --- | --- |
-| 人和 | 役満x1 |
-| 大七星 | 役満x1 |
+| 人和 | 役満 x1 |
+| 大七星 | 役満 x1 |
 
 ## Api
 
@@ -105,22 +105,22 @@ new Riichi('112233456789m1s1s+24') //場風南自風北
 ### use-before-calc()
 
 ```js
-const Riichi = require('riichi')
-const riichi = new Riichi('112233456789m11s+o')
+const Riichi = require("riichi");
+const riichi = new Riichi("112233456789m11s+o");
 
-riichi.disableWyakuman() //2倍役満禁止
-riichi.disableKuitan() //喰断禁止
-riichi.disableAka() //赤dora禁止
-riichi.enableLocalYaku('人和') //人和有効
-riichi.disableYaku('大七星') //大七星禁止
+riichi.disableWyakuman(); //2倍役満禁止
+riichi.disableKuitan(); //喰断禁止
+riichi.disableAka(); //赤dora禁止
+riichi.enableLocalYaku("人和"); //人和有効
+riichi.disableYaku("大七星"); //大七星禁止
 
-let result = riichi.calc()
+let result = riichi.calc();
 ```
 
 # 向聴数牌理計算 [lib](https://github.com/takayama-lily/syanten)
 
 ```js
-console.log(new Riichi('111222333m11p123z').calc())
+console.log(new Riichi("111222333m11p123z").calc());
 ```
 
 **Output**

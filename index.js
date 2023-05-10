@@ -2,8 +2,8 @@
  * Copyright (C) https://github.com/takayama-lily/riichi
  */
 'use strict'
-const agari = require('agari')
-const syanten = require('syanten')
+const agari = require('./agari')
+const syanten = require('./syanten')
 const YAKU = require('./yaku')
 const MPSZ = ['m', 'p', 's', 'z']
 const KAZE = [undefined, '東', '南' ,'西', '北', '白', '發', '中']
@@ -12,6 +12,9 @@ const ceil10 = (num)=>{
 }
 const ceil100 = (num)=>{
     return Math.ceil(num/100)*100
+}
+const floor100 = (num)=>{
+    return Math.floor(num/100)*100
 }
 const isHai = (text)=>{
     return typeof text === 'string' && text.length === 2 && !isNaN(text[0]) && MPSZ.includes(text[1])
@@ -66,7 +69,7 @@ class Riichi {
     /**
      * @param string data
      */
-    constructor(data) {
+    constructor(data, option = {}) {
         this.hai = [] //array型手牌(和了牌含) 例:['1m', '1m', '1m', '2m', '2m']
         this.haiArray = [ // 複合array型手牌(和了牌含)
             [0,0,0,0,0,0,0,0,0],
@@ -77,6 +80,7 @@ class Riichi {
         this.furo = [] //副露 例:[['1m', '1m', '1m'], ['2m', '2m'], ['3m', '4m', '5m'], ['6m', '6m', '6m', '6m']]
         this.agari = '' //和了牌 例:'2m'
         this.dora = [] //dora 例:['6z', '7z']
+        this.honba = 0 //本場 例:['b1', 'b2']
         this.extra = '' //付属役 例:'riho22' ※付属役一覧参照
         this.isTsumo = true //true:自摸 false:栄和
         this.isOya = false //true:親家 false:子家
@@ -91,6 +95,7 @@ class Riichi {
             'yaku': {}, //手役 例:{'天和':'役満','大四喜':'ダブル役満'} 例:{'立直':'1飜','清一色':'6飜'}
             'han': 0, //飜数
             'fu': 0, //符数
+            'honba': 0, //本場
             'ten': 0, //点数(this.isOya=undefined場合，計算不能)
             'name': '', //例:'満貫'、'跳満'、'倍満'、'三倍満'、'数え役満'
             'text': '', //結果text 例:'30符4飜'、'40符4飜 満貫'、'6倍役満'
@@ -107,6 +112,11 @@ class Riichi {
         this.allowKuitan = true //false:喰断禁止
         this.allowAka = true //false:赤dora禁止
         this.hairi = true //未和了の場合、牌理を計算
+        this.yosou = false //聴牌時、点数を予想
+        this.data = data
+        this.option = option
+        this.sanma = false
+        this.tsumozon = true
 
         // 初期設定
         if (typeof data !== 'string')
@@ -115,7 +125,7 @@ class Riichi {
         let arr = data.split('+')
         let hai = arr.shift()
         for (let v of arr) {
-            if (!v.includes('m') && !v.includes('p') && !v.includes('s') && !v.includes('z'))
+            if (!v.includes('m') && !v.includes('p') && !v.includes('s') && !v.includes('z') && !v.includes('b'))
                 this.extra = v
             else if (v[0] === 'd')
                 this.dora = parse(v.substr(1)).res
@@ -139,7 +149,6 @@ class Riichi {
                 }
             }
         }
-
         let tmp = parse(hai)
         this.hai = tmp.res
         this.aka += tmp.aka
@@ -172,6 +181,16 @@ class Riichi {
 
         this.tmpResult.error = false
         this.finalResult = JSON.parse(JSON.stringify(this.tmpResult))
+
+        //オプション設定
+
+        //本場設定
+        if(!isNaN(option.honba))
+            this.honba = option.honba
+
+        //三麻設定
+        this.sanma = option.sanma === true
+        this.tsumozon = option.tsumozon === undefined || option.tsumozon === true
     }
 
     /**
@@ -188,8 +207,8 @@ class Riichi {
      * dora枚数計算
      */
     calcDora() {
-        if (!this.tmpResult.han)
-            return
+        //if (!this.tmpResult.han)
+        //    return
         let dora = 0
         for (let v of this.hai) {
             for (let vv of this.dora) {
@@ -309,12 +328,31 @@ class Riichi {
         }
         this.tmpResult.text += (this.tmpResult.name ? ' ' : '') + this.tmpResult.name
         if (this.isTsumo) {
-            this.tmpResult.oya = [ceil100(base*2),ceil100(base*2),ceil100(base*2)]
-            this.tmpResult.ko = [ceil100(base*2),ceil100(base),ceil100(base)]
+            if(this.sanma){
+                if(this.tsumozon){
+                    this.tmpResult.oya = [ceil100(base*2)+(100*this.honba),ceil100(base*2)+(100*this.honba)]
+                    this.tmpResult.ko = [ceil100(base*2)+(100*this.honba),ceil100(base)+(100*this.honba)]
+                }else{
+                    this.tmpResult.oya = [ceil100(base*3)+(100*this.honba),ceil100(base*3)+(100*this.honba)]
+                    this.tmpResult.ko = [ceil100(base*4/3*2)+(100*this.honba),ceil100(base*4/3)+(100*this.honba)]
+                    if(eval(this.tmpResult.ko.join('+'))!==ceil100(base*4)+(200*this.honba)){
+                        this.tmpResult.ko[1]-=100
+                    }
+                }
+            }else{
+                this.tmpResult.oya = [ceil100(base*2)+(100*this.honba),ceil100(base*2)+(100*this.honba),ceil100(base*2)+(100*this.honba)]
+                this.tmpResult.ko = [ceil100(base*2)+(100*this.honba),ceil100(base)+(100*this.honba),ceil100(base)+(100*this.honba)]
+            }
         } else {
-            this.tmpResult.oya = [ceil100(base*6)]
-            this.tmpResult.ko = [ceil100(base*4)]
+            if(this.sanma){
+                this.tmpResult.oya = [ceil100(base*6)+(300*this.honba)]
+                this.tmpResult.ko = [ceil100(base*4)+(300*this.honba)]
+            }else{
+                this.tmpResult.oya = [ceil100(base*6)+(200*this.honba)]
+                this.tmpResult.ko = [ceil100(base*4)+(200*this.honba)]
+            }
         }
+        this.tmpResult.honba = this.honba;
         this.tmpResult.ten = this.isOya ? eval(this.tmpResult.oya.join('+')) : eval(this.tmpResult.ko.join('+'))
         this.tmpResult.text += ' ' + this.tmpResult.ten + '点'
         if (this.isTsumo) {
@@ -399,9 +437,106 @@ class Riichi {
         if (!this.tmpResult.isAgari || this.hai.length + this.furo.length * 3 !== 14) {
             if (this.hairi) {
                 this.tmpResult.hairi = syanten.hairi(this.haiArray)
+                let check4 = this.tmpResult.hairi.wait
+                if(check4 == undefined){
+                    check4 = this.tmpResult.hairi
+                    for(let item in check4){
+                        if(item == 'now')
+                            continue
+                        if(Object.values(check4[item]).length == 1 && Object.values(check4[item])[0] == 0){
+                            delete this.tmpResult.hairi[item]
+                        }
+                    }
+                    if(Object.keys(this.tmpResult.hairi).length == 1)
+                        this.tmpResult.hairi.now++
+                }else{
+                    if(this.tmpResult.hairi.now === 0 && Object.keys(check4).length === 1 && Object.values(check4)[0] === 0){
+                        this.tmpResult.hairi.now++
+                        delete this.tmpResult.hairi.wait[Object.keys(this.tmpResult.hairi.wait)[0]]
+                    }
+                }
                 this.tmpResult.hairi7and13 = syanten.hairi(this.haiArray, true)
+                this.tmpResult.chi = syanten.checkChi(this.haiArray)
+                this.tmpResult.pon = syanten.checkPon(this.haiArray)
+                let yosou = {count: 0}
+                if(this.tmpResult.hairi.now == 0){
+                    for(let key in this.tmpResult.hairi.wait){
+                        yosou.count++
+                        let ans = {}
+                        let arr = this.data.split('+')
+                        arr[0] += key
+                        let newData = arr.join('+')
+                        let riichi = new Riichi(newData)
+                        let ans_json = riichi.calc()
+                        let tsumo = {}
+                        tsumo['han'] = ans_json.han
+                        tsumo['fu'] = ans_json.fu
+                        tsumo['yakuman'] = ans_json.yakuman
+                        tsumo['ten'] = ans_json.ten
+                        ans['tsumo'] = tsumo
+
+                        arr = this.data.split('+')
+                        arr[0] += '+' + key
+                        newData = arr.join('+')
+                        riichi = new Riichi(newData)
+                        ans_json = riichi.calc()
+                        let ron = {}
+                        ron['han'] = ans_json.han
+                        ron['fu'] = ans_json.fu
+                        ron['yakuman'] = ans_json.yakuman
+                        ron['ten'] = ans_json.ten
+                        ans['ron'] = ron
+
+                        yosou[key] = ans;
+                    }
+                }
+                if(this.tmpResult.hairi7and13.now == 0){
+                    for(let key in this.tmpResult.hairi7and13.wait){
+                        let ans = {}
+                        if(yosou[key] == undefined){
+                            yosou.count++;
+                        }else{
+                            ans = yosou[key]
+                        }
+                        let arr = this.data.split('+')
+                        arr[0] += key
+                        let newData = arr.join('+')
+                        let riichi = new Riichi(newData)
+                        let ans_json = riichi.calc()
+                        if(yosou[key] == undefined || yosou[key][3] > ans_json.ten){
+                            let tsumo = {}
+                            tsumo['han'] = ans_json.han
+                            tsumo['fu'] = ans_json.fu
+                            tsumo['yakuman'] = ans_json.yakuman
+                            tsumo['ten'] = ans_json.ten
+                            ans['tsumo'] = tsumo
+                        }
+
+                        arr = this.data.split('+')
+                        arr[0] += '+' + key
+                        newData = arr.join('+')
+                        riichi = new Riichi(newData)
+                        ans_json = riichi.calc()
+                        if(yosou[key] == undefined || yosou[key][3] > ans_json.ten){
+                            let ron = {}
+                            ron['han'] = ans_json.han
+                            ron['fu'] = ans_json.fu
+                            ron['yakuman'] = ans_json.yakuman
+                            ron['ten'] = ans_json.ten
+                            ans['ron'] = ron
+                        }
+                        
+                        yosou[key] = ans;
+                    }
+                }
+                if(yosou.count !== 0)
+                    this.tmpResult.yosou = yosou
             }
             return this.tmpResult
+        }else{
+            let checkKan = syanten.checkKan(this.haiArray)
+            if(checkKan.count>0)
+                this.tmpResult.pon = checkKan
         }
 
         this.finalResult.isAgari = true
