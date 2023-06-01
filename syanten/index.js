@@ -22,7 +22,7 @@
         let tmp_alone = 0;
         for (let i = 0; i < 9; i++) {
           if (arr1[i] === 0 || arr1[i] === undefined) continue;
-          if (arr1[i] >= 3) (arr1[i] -= 3), tmp_mentsu++;
+          if (arr1[i] >= 3)(arr1[i] -= 3), tmp_mentsu++;
           if (arr1[i] > 0) {
             if (is_jihai) continue;
             if (arr1[i + 1] > 0 && arr1[i + 2] > 0) {
@@ -51,8 +51,7 @@
         }
         tmp_alone += sum(arr1);
         tmp1 = [tmp_mentsu, tmp_tatsu, tmp_alone];
-      }
-      {
+      } {
         let arr2 = [...arr];
         let tmp_mentsu = 0;
         let tmp_tatsu = 0;
@@ -62,17 +61,17 @@
           if (!is_jihai) {
             if (arr2[i] >= 2 && arr2[i + 1] >= 2 && arr2[i + 2] >= 2)
               (arr2[i] -= 2),
-                (arr2[i + 1] -= 2),
-                (arr2[i + 2] -= 2),
-                (tmp_mentsu += 2);
+              (arr2[i + 1] -= 2),
+              (arr2[i + 2] -= 2),
+              (tmp_mentsu += 2);
             if (arr2[i] >= 2 && arr2[i + 1] >= 2 && arr2[i + 2] >= 2)
               (arr2[i] -= 2),
-                (arr2[i + 1] -= 2),
-                (arr2[i + 2] -= 2),
-                (tmp_mentsu += 2);
+              (arr2[i + 1] -= 2),
+              (arr2[i + 2] -= 2),
+              (tmp_mentsu += 2);
           }
-          if (arr2[i] === 3 || arr2[i] === 4) (arr2[i] -= 3), tmp_mentsu++;
-          if (arr2[i] === 2) (arr2[i] -= 2), tmp_tatsu++;
+          if (arr2[i] === 3 || arr2[i] === 4)(arr2[i] -= 3), tmp_mentsu++;
+          if (arr2[i] === 2)(arr2[i] -= 2), tmp_tatsu++;
           if (is_jihai) continue;
           if (arr2[i] > 0 && arr2[i + 1] > 0 && arr2[i + 2] > 0)
             arr2[i]--, arr2[i + 1]--, arr2[i + 2]--, tmp_mentsu++;
@@ -118,7 +117,7 @@
     if (s > 14 || s % 3 === 0) return -2;
     furo = Math.round((14 - s) / 3);
     if (s % 3 === 1) {
-      for (let i = 33; ; i--) {
+      for (let i = 33;; i--) {
         if (!arr[i]) {
           arr[i]++;
           hai_arr[Math.floor(i / 9)][i % 9]++;
@@ -130,9 +129,9 @@
       if (arr[i] === 0) continue;
       let t = [];
       (t[0] = [...hai_arr[0]]),
-        (t[1] = [...hai_arr[1]]),
-        (t[2] = [...hai_arr[2]]),
-        (t[3] = [...hai_arr[3]]);
+      (t[1] = [...hai_arr[1]]),
+      (t[2] = [...hai_arr[2]]),
+      (t[3] = [...hai_arr[3]]);
       t[Math.floor(i / 9)][i % 9] -= arr[i] >= 2 ? 2 : arr[i];
       search(t[0]) &&
         search(t[1]) &&
@@ -186,7 +185,9 @@
 
   const MPSZ = ["m", "p", "s", "z"];
   const checkChi = (hai_arr, isUniverse = false) => {
-    let res = { count: 0 };
+    let res = {
+      count: 0
+    };
     let map = {};
     for (let i = 0; i < 4; i++) {
       if (!isUniverse && i == 3) continue;
@@ -215,7 +216,9 @@
     return res;
   };
   const checkPon = (hai_arr) => {
-    let res = { count: 0 };
+    let res = {
+      count: 0
+    };
     let map = {};
     for (let i = 0; i < 4; i++) {
       for (let ii = 0; ii < 9; ii++) {
@@ -232,12 +235,17 @@
     return res;
   };
   const checkKan = (hai_arr) => {
-    let res = { count: 0 };
+    let res = {
+      count: 0
+    };
     let map = {};
     for (let i = 0; i < 4; i++) {
       for (let ii = 0; ii < 9; ii++) {
         if (hai_arr[i][ii] > 3) {
-          map[ii + 1 + MPSZ[i]] = { minkan: false, ankan: true };
+          map[ii + 1 + MPSZ[i]] = {
+            minkan: false,
+            ankan: true
+          };
           res.count++;
         }
       }
@@ -246,13 +254,15 @@
     return res;
   };
   const hairi = (hai_arr, is7or13 = false) => {
-    let syantenCalc = !is7or13
-      ? syanten
-      : (haiArr) => {
-          return Math.min(syanten7(haiArr), syanten13(haiArr));
-        };
+    let syantenCalc = !is7or13 ?
+      syanten :
+      (haiArr) => {
+        return Math.min(syanten7(haiArr), syanten13(haiArr));
+      };
     let sht = syantenCalc(hai_arr);
-    let res = { now: sht };
+    let res = {
+      now: sht
+    };
     if (sht < 0) return res;
     let self = [];
     const calcHairi = () => {
@@ -283,7 +293,7 @@
     };
     if (
       (sum(hai_arr[0]) + sum(hai_arr[1]) + sum(hai_arr[2]) + sum(hai_arr[3])) %
-        3 ===
+      3 ===
       1
     ) {
       res.wait = calcHairi();
