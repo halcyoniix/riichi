@@ -3,120 +3,169 @@
 麻雀飜符手役点数計算  
 Japanese riichi mahjong hand calculation
 
-**Install with npm:**
+This fork is mainly for loose translations and personal convention, based on another fork by [HinanoAira](https://github.com/HinanoAira/riichi/) for sanma support.
+
+**Install original with npm:**
 
 ```
 $ npm i riichi
 ```
+**This will install [the original repo](https://github.com/takayama-lily/riichi) that's on node, not this one.**
 
+---
 ## Usage
 
 ```js
 const Riichi = require("riichi");
-const riichi = new Riichi("112233456789m11s");
+const riichi = new Riichi("234m234678s234p44z");
 console.log(riichi.calc());
 ```
-
-Output:
-
+### Output:
 ```js
 {
-  isAgari: true,
-  yakuman: 0,
-  yaku: { '一気通貫': '2飜', '一盃口': '1飜', '門前清自摸和': '1飜' },
-  han: 4,
-  fu: 30,
-  ten: 7900,
-  name: '',
-  text: '(東場南家)自摸 30符4飜 7900点(3900,2000)',
-  oya: [ 3900, 3900, 3900 ],
-  ko: [ 3900, 2000, 2000 ],
-  error: false
+	isAgari: true,
+	yakuman: 0,
+	yaku: { 'Sanshoku Doujun': 2, 'Menzen Tsumo': 1 },
+	han: 3,
+	fu: 30,
+	honba: 0,
+	ten: 4000,
+	name: '',
+	text: ' 4000 Pts (2000,1000)',
+	round: 'E',
+	seat: 'S',
+	winType: 'Tsumo',
+	oya: [ 2000, 2000, 2000 ],
+	ko: [ 2000, 1000, 1000 ],
+	error: false
 }
 ```
+---
+### Suits
+| ID | Suit |
+| - | - |
+| m | Manzu |
+| s | Souzu |
+| p | Pinzu |
+| z | Honor |
 
-"m,p,s,z" means "萬子,筒子,索子,字牌"  
-"1z-7z" means "東南西北白發中"
-"0m" means "赤 5 萬"
+### Honor Tiles
 
-**自摸 & 栄和:**
+| ID | Tile |
+| - | - |
+| 1z | East (東) |
+| 2z | South (南) |
+| 3z | West (西) |
+| 4z | North (北) |
+| 5z | White Dragon (白) |
+| 6z | Green Dragon (發) |
+| 7z | Red Dragon (中) |
+
+---
+
+## Ron & Tsumo
+
+You can specify if the hand was won with a ron or tsumo by using specific flags in the riichi string or by setting the riichi object's attributes.
+
+### Using [string flags](##string-flags):
+```js
+new Riichi("34m234678s234p44z+2m"); //ron with the 2 man
+new Riichi("34m234678s234p44z2m"); //tsumo with the 2 man
+```
+### Using [attributes](##Attributes):
+```js
+// ron with the 2 man
+const riichi = new Riichi("234m234678s234p44z");
+riichi.isTsumo = false
+riichi.agari = "2m"
+
+// tsumo with the 2 man
+const riichi = new Riichi("234m234678s234p44z");
+riichi.isTsumo = true
+riichi.agari = "2m"
+```
+---
+## String Flags
 
 ```js
-new Riichi("112233456789m1s1s"); //自摸
-new Riichi("112233456789m1s+1s"); //栄和
+new Riichi("1s+1s+123m55z666z7777z+d12s+trihk22"); // appened modifier flags at the end. refer to table below
 ```
 
-**副露:**
+| Option | Definition |
+| - | - |
+| t | Tenhou / Chiihou / Renhou |
+| r, l | Riichi |
+| i, y | Ippatsu |
+| w | Double Riichi |
+| h | Haitei / Hotei |
+| k | Chankan / Rinshan |
+| o | Use local yaku |
+| ## | Represent prevalent wind and seat wind. Defaults to `12`. Example: `24` (South round, North seat) |
+
+### Calls
 
 ```js
-new Riichi("1s+1s+123m55z666z7777z"); //副露:123m順子 5z暗槓 6z明刻 7z明槓
+// closed tiles: 56m, 22s
+// called tiles: 5m pon, 345p chii, 2s kan
+// winning with the 7m
+new Riichi("56m22s+555m345p2222s+7m");
 ```
 
-**Dora:**
+### Dora
 
 ```js
 new Riichi("112233456789m1s1s+d12s"); //Dora: 1s 2s
 ```
-
-**Extra Option:**
-
+### Seats
 ```js
-new Riichi("1s+1s+123m55z666z7777z+d12s+trihk22"); //Extra:trihk22
+new Riichi("112233456789m1s1s+1"); //East Seat
+new Riichi("112233456789m1s1s+21"); //South round, East seat
+new Riichi("112233456789m1s1s+43"); //North round, West seat ???
+// prevalant wind and seat wind defaults to East and South respectively.
 ```
-
-| Option | Meaning           |
-| ------ | ----------------- |
-| t      | 天和/地和/人和    |
-| r(l)   | 立直              |
-| i(y)   | 一発              |
-| w      | w 立直            |
-| h      | 海底摸月/河底撈魚 |
-| k      | 槍槓/嶺上開花     |
-| o      | 全 local 役有効   |
-| 22     | 場風南自風南      |
-
-**場風自風:**
-
-1234=東南西北  
-default: 場風東自風南
-
-```js
-new Riichi("112233456789m1s1s+1"); //(場風東)自風東
-new Riichi("112233456789m1s1s+21"); //場風南自風東
-new Riichi("112233456789m1s1s+24"); //場風南自風北
-```
-
-**local yaku list:**
-| Name | 飜数 |
+---
+## Attributes
+| Attribute | Definition |
 | --- | --- |
-| 人和 | 役満 x1 |
-| 大七星 | 役満 x1 |
+| riichi.furo `array` | Called tiles. Example: `[["1m", "1m", "1m"], ["2m", "2m"], ["3m", "4m", "5m"], ["6m", "6m", "6m", "6m"]]` |
+| riichi.agari `string` | The winning tile. Example: `"2s"` |
+| riichi.dora `array` | Dora tiles. Example: `["4z", "7p"]`|
+| riichi.honba `int` | Honba amount. |
+| riichi.extra `string` | Modifier flags to appended to the riichi string. Example: `"ri13"`|
+| riichi.isTsumo `bool` | If the win was a Tsumo or Ron. Defaults to `true`. |
+| riichi.isOya `bool` | If the win was in the dealer seat. Defaults to `false`. |
+| riichi.bakaze `int` | The prevalent wind. |
+| riichi.jikaze `int` | The seat wind. |
+| riichi.aka `int` | The amount of red fives in the hand. |
+| riichi.allLocalEnabled `bool` | Enable local yaku. Defaults to `false`. |
+| riichi.localEnabled `array` | Enable specific local yaku. Example: `["Renhou"]` |
+| riichi.disabled `array` | Disables specific yaku. Example: `["Chankan", "Tanyao"]` |
+| riichi.allowWyakuman `bool` | Allows double yakuman. Defaults to `true`. |
+| riichi.allowKuitan `bool` | Allows open tanyao. Defaults to `true`. |
+| riichi.allowAka `bool` | Allows red fives to be calculated. Defaults to `true`. |
+| riichi.hairi `bool` | Returns shanten calculations if the hand provided is not in tenpai. Defaults to `true`. |
+| riichi.sanma `bool` | Calculate hand for sanma. Defaults to `false`. |
+| riichi.tsumozon `bool` | Consider tsumo loss for sanma calculations. Defaults to `true`. Used in conjunction with `riichi.sanma`. |
 
-## Api
 
-- [Class: Riichi](#Usage)
-  - [riichi.calc()](#Usage)
-  - [riichi.disableWyakuman()](#use-before-calc)
-  - [riichi.disableKuitan()](#use-before-calc)
-  - [riichi.disableAka()](#use-before-calc)
-  - [riichi.enableLocalYaku(name)](#use-before-calc)
-  - [riichi.disableYaku(name)](#use-before-calc)
+## Modifier Functions
+Alternatively, some attributes have functional counterparts that can be called from the riichi object.
+| Function | Equivalant |
+| --- | --- |
+| riichi.disableWyakuman() | `riichi.allowWyakuman = false` |
+| riichi.disableKuitan() | `riichi.allowKuitan = false` |
+| riichi.disableAka() | `riichi.allowAka = false` |
+| riichi.enabledLocalYaku(`string`) | `riichi.localEnabled = [<string>]` |
+| riichi.disableYaku(`string`) | `riichi.disabled = [<string>]` |
+---
+## Supported Local Yaku
+| Name | Value |
+| --- | --- |
+| Daichisei | Yakuman |
+| Renhou | Yakuman |
 
-### use-before-calc()
 
-```js
-const Riichi = require("riichi");
-const riichi = new Riichi("112233456789m11s+o");
-
-riichi.disableWyakuman(); //2倍役満禁止
-riichi.disableKuitan(); //喰断禁止
-riichi.disableAka(); //赤dora禁止
-riichi.enableLocalYaku("人和"); //人和有効
-riichi.disableYaku("大七星"); //大七星禁止
-
-let result = riichi.calc();
-```
-
+<!-- 
 # 向聴数牌理計算 [lib](https://github.com/takayama-lily/syanten)
 
 ```js
@@ -140,3 +189,4 @@ console.log(new Riichi("111222333m11p123z").calc());
   }
 }
 ```
+ -->

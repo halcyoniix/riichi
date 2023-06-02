@@ -85,16 +85,6 @@ class Riichi {
 		this.dora = [] //ex:['6z', '7z']
 		this.honba = 0
 		this.extra = '' //options string ex:'riho22'
-		/*
-			t     tenhou/chiihou
-			r(l)  riichi
-			i(y)  ippatsu
-			w     double riichi
-			h     haitei / hotei
-			k     chankan / rinshan
-			o     enable local yaku
-			22    prevalent wind / seat wind in order
-		*/
 		this.isTsumo = true
 		this.isOya = false //dealer?
 		this.bakaze = 1 //prevalent wind 1234=東南西北
@@ -244,11 +234,11 @@ class Riichi {
 		}
 		if (dora) {
 			this.tmpResult.han += dora
-			this.tmpResult.yaku['Dora'] = dora + ' Han'
+			this.tmpResult.yaku['Dora'] = dora
 		}
 		if (this.allowAka && this.aka) {
 			this.tmpResult.han += this.aka
-			this.tmpResult.yaku['Aka Dora'] = this.aka + ' Han'
+			this.tmpResult.yaku['Aka Dora'] = this.aka
 		}
 	}
 
@@ -408,7 +398,7 @@ class Riichi {
 					let n = v.han
 					if (v.isFuroMinus && !this.isMenzen())
 						n--
-					this.tmpResult.yaku[k] = n + ' Han'
+					this.tmpResult.yaku[k] = n
 					this.tmpResult.han += n
 				}
 			}
