@@ -1,7 +1,7 @@
 # **Riichi**
 
 麻雀飜符手役点数計算  
-Japanese riichi mahjong hand calculation
+Riichi mahjong hand calculation. Originally by [takayama-lily](https://github.com/takayama-lily/riichi).
 
 This fork is mainly for loose translations and personal convention, based on another fork by [HinanoAira](https://github.com/HinanoAira/riichi/) for sanma support.
 
@@ -67,12 +67,12 @@ console.log(riichi.calc());
 
 You can specify if the hand was won with a ron or tsumo by using specific flags in the riichi string or by setting the riichi object's attributes.
 
-### Using [string flags](##string-flags):
+### Using [string flags](#string-flags):
 ```js
 new Riichi("34m234678s234p44z+2m"); //ron with the 2 man
 new Riichi("34m234678s234p44z2m"); //tsumo with the 2 man
 ```
-### Using [attributes](##Attributes):
+### Using [attributes](#attributes):
 ```js
 // ron with the 2 man
 const riichi = new Riichi("234m234678s234p44z");
@@ -88,7 +88,7 @@ riichi.agari = "2m"
 ## String Flags
 
 ```js
-new Riichi("1s+1s+123m55z666z7777z+d12s+trihk22"); // appened modifier flags at the end. refer to table below
+new Riichi("1s+1s+123m55z666z7777z+d12s+trihk22"); // append modifier flags at the end. refer to table below
 ```
 
 | Option | Definition |
