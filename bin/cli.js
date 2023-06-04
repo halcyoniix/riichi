@@ -1,7 +1,7 @@
-"use strict";
-let argument = process.argv.slice(-1)[0];
-if (process.argv.length <= 2 || argument === "-h" || argument === "--help") {
-  let msg = `
+'use strict'
+let argument = process.argv.slice(-1)[0]
+if (process.argv.length <= 2 || argument === '-h' || argument === '--help') {
+    let msg = `
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
     * Usage: Hai[+Agari][+Furo][+Dora][+Extra]
     * 
@@ -39,11 +39,11 @@ if (process.argv.length <= 2 || argument === "-h" || argument === "--help") {
     *  21=南場東家  22=南場南家 23=南場西家 24=南場北家
     *  (default: 東場南家)
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-`;
-  console.log(msg);
+`
+    console.log(msg)
 } else {
-  const Riichi = require("../index.js");
-  const riichi = new Riichi(argument);
-  let result = riichi.calc();
-  console.log(result);
+    const Riichi = require('../index.js')
+    const riichi = new Riichi(argument)
+    let result = riichi.calc()
+    console.log(result)
 }

@@ -68,6 +68,15 @@ const parse = (text) => {
 	}
 }
 
+const yakumanMult = [
+	'Yakuman',
+	'Double Yakuman',
+	'Triple Yakuman',
+	'Quadruple Yakuman',
+	'Quintuple Yakuman',
+	'Sextuple Yakuman',
+]
+
 class Riichi {
 	/**
 	 * @param string data
@@ -234,11 +243,20 @@ class Riichi {
 		}
 		if (dora) {
 			this.tmpResult.han += dora
-			this.tmpResult.yaku['Dora'] = dora
+			this.tmpResult.yaku['dora'] = dora
+			this.tmpResult.yaku['dora'] = {
+				'han': dora,
+				'en': 'Dora',
+				'jp': 'ドラ',
+			}
 		}
 		if (this.allowAka && this.aka) {
 			this.tmpResult.han += this.aka
-			this.tmpResult.yaku['Aka Dora'] = this.aka
+			this.tmpResult.yaku['akaDora'] = {
+				'han': this.aka,
+				'en': 'Red Five',
+				'jp': '赤ドラ',
+			}
 		}
 	}
 
@@ -247,9 +265,9 @@ class Riichi {
 	 */
 	calcFu() {
 		let fu = 0
-		if (this.tmpResult.yaku['Chiitoitsu']) {
+		if (this.tmpResult.yaku['chiitoitsu']) {
 			fu = 25
-		} else if (this.tmpResult.yaku['Pinfu']) {
+		} else if (this.tmpResult.yaku['pinfu']) {
 			fu = this.isTsumo ? 20 : 30
 		} else {
 			fu = 20
@@ -307,7 +325,8 @@ class Riichi {
 		this.tmpResult.winType += this.isTsumo ? 'Tsumo' : 'Ron'
 		if (this.tmpResult.yakuman) {
 			base = 8000 * this.tmpResult.yakuman
-			this.tmpResult.name = this.tmpResult.yakuman > 1 ? (this.tmpResult.yakuman + ' Yakuman') : 'Yakuman'
+			//this.tmpResult.name = this.tmpResult.yakuman > 1 ? (`${this.tmpResult.yakuman}x Yakuman`) : 'Yakuman'
+			this.tmpResult.name = this.tmpResult.yakuman > 1 ? yakumanMult[this.tmpResult.yakuman-1] : yakumanMult[0]
 		} else {
 			if (!this.tmpResult.han)
 				return
@@ -360,11 +379,11 @@ class Riichi {
 		}
 		this.tmpResult.honba = this.honba;
 		this.tmpResult.ten = this.isOya ? eval(this.tmpResult.oya.join('+')) : eval(this.tmpResult.ko.join('+'))
-		this.tmpResult.text += ' ' + this.tmpResult.ten + ' Pts '
+		this.tmpResult.text += this.tmpResult.ten + ' Points '
 		if (this.isTsumo) {
 			this.tmpResult.text += '('
 			if (this.isOya)
-				this.tmpResult.text += this.tmpResult.oya[0] + 'all'
+				this.tmpResult.text += this.tmpResult.oya[0] + ' all'
 			else
 				this.tmpResult.text += this.tmpResult.ko[0] + ',' + this.tmpResult.ko[1]
 			this.tmpResult.text += ')'
@@ -379,6 +398,7 @@ class Riichi {
 		this.tmpResult.yaku = {}
 		this.tmpResult.yakuman = 0
 		this.tmpResult.han = 0
+		//console.log('###########', this)
 		for (let k in YAKU) {
 			let v = YAKU[k]
 			if (this.disabled.includes(k))
@@ -393,14 +413,14 @@ class Riichi {
 				if (v.yakuman) {
 					let n = this.allowWyakuman ? v.yakuman : 1
 					this.tmpResult.yakuman += n
-					this.tmpResult.yaku[k] = n > 1 ? 'Double Yakuman' : 'Yakuman'
 				} else {
 					let n = v.han
 					if (v.isFuroMinus && !this.isMenzen())
 						n--
-					this.tmpResult.yaku[k] = n
+					//this.tmpResult.yaku[k] = v
 					this.tmpResult.han += n
 				}
+				this.tmpResult.yaku[k] = v
 			}
 		}
 	}

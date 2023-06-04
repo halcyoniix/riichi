@@ -25,13 +25,28 @@ console.log(riichi.calc());
 {
 	isAgari: true,
 	yakuman: 0,
-	yaku: { 'Sanshoku Doujun': 2, 'Menzen Tsumo': 1 },
+	yaku: {
+		sanshokuDoujun: {
+			han: 2,
+			isFuroMinus: true,
+			en: 'Mixed Triple Sequence',
+			jp: '三色同順',
+			ro: 'Sanshoku Doujun'
+		},
+		menzenTsumo: {
+			han: 1,
+			isMenzenOnly: true,
+			en: 'Self Draw',
+			jp: 'ツモ',
+			ro: 'Tsumo'
+		}
+	},
 	han: 3,
 	fu: 30,
 	honba: 0,
 	ten: 4000,
 	name: '',
-	text: ' 4000 Pts (2000,1000)',
+	text: '4000 Points (2000,1000)',
 	round: 'E',
 	seat: 'S',
 	winType: 'Tsumo',
@@ -44,10 +59,10 @@ console.log(riichi.calc());
 ### Suits
 | ID | Suit |
 | - | - |
-| m | Manzu |
-| s | Souzu |
-| p | Pinzu |
-| z | Honor |
+| m | Manzu (萬子) |
+| p | Pinzu (筒子) |
+| s | Souzu (索子) |
+| z | Honor (風牌) |
 
 ### Honor Tiles
 
@@ -111,10 +126,11 @@ new Riichi("1s+1s+123m55z666z7777z+d12s+trihk22"); // append modifier flags at t
 new Riichi("56m22s+555m345p2222s+7m");
 ```
 
-### Dora
+### Dora & Aka Dora
 
 ```js
 new Riichi("112233456789m1s1s+d12s"); //Dora: 1s 2s
+new Riichi("112233406789m1s1s"); //Aka Dora: 0m
 ```
 ### Seats
 ```js

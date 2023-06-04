@@ -1,10 +1,10 @@
 /*
  * Copyright (C) https://github.com/takayama-lily/riichi
  */
-"use strict";
-const assert = require("assert");
-const agari = require("./agari");
-const MPSZ = ["m", "p", "s", "z"];
+'use strict';
+const assert = require('assert');
+const agari = require('./agari');
+const MPSZ = ['m', 'p', 's', 'z'];
 const checkAllowed = (o, allowed) => {
 	for (let v of o.hai)
 		if (!allowed.includes(v)) return false;
@@ -16,7 +16,7 @@ const checkAllowed = (o, allowed) => {
 const checkChanta = (o, allow) => {
 	let hasJyuntsu = false;
 	for (let v of o.currentPattern) {
-		if (typeof v === "string") {
+		if (typeof v === 'string') {
 			if (!allow.includes(v)) return false;
 		} else if (v.length <= 2 || v[0] === v[1]) {
 			if (!allow.includes(v[0])) return false;
@@ -30,34 +30,42 @@ const checkChanta = (o, allow) => {
 };
 const checkYakuhai = (o, pos) => {
 	for (let v of o.currentPattern) {
-		if (typeof v !== "string" && v[0] === pos + "z") return true;
+		if (typeof v !== 'string' && v[0] === pos + 'z') return true;
 	}
 	return false;
 };
-
 const YAKU = {
-	"Junsei Kokushi Musou": {
-		"yakuman": 2,
-		"isMenzenOnly": true,
-		"check": (o) => {
+	'junseiKokushiMusou': {
+		'yakuman': 2,
+		'isMenzenOnly': true,
+		'en': 'Thirteen Orphans (13-Sided Wait)',
+		'jp': '国士無双１３面待ち',
+		'ro': 'Junsei Kokushi Musou',
+		'check': (o) => {
 			return agari.check13(o.haiArray) && o.hai.reduce((total, v) => {
 				return v === o.agari ? ++total : total
 			}, 0) === 2
 		}
 	},
-	"Kokushi Musou": {
-		"yakuman": 1,
-		"isMenzenOnly": true,
-		"check": (o) => {
+	'kokushiMusou': {
+		'yakuman': 1,
+		'isMenzenOnly': true,
+		'en': 'Thirteen Orphans',
+		'jp': '国士無双',
+		'ro': 'Kokushi Musou',
+		'check': (o) => {
 			return agari.check13(o.haiArray) && o.hai.reduce((total, v) => {
 				return v === o.agari ? ++total : total
 			}, 0) === 1
 		}
 	},
-	"Junsei Chuuren Poutou": {
-		"yakuman": 2,
-		"isMenzenOnly": true,
-		"check": (o) => {
+	'junseiChuurenPoutou': {
+		'yakuman': 2,
+		'isMenzenOnly': true,
+		'en': 'Pure Nine Gates',
+		'jp': '純正九蓮宝燈',
+		'ro': 'Junsei Chuuren Poutou',
+		'check': (o) => {
 			let i = MPSZ.indexOf(o.agari[1])
 			let arr = o.haiArray[i].concat()
 			if (arr[0] < 3 || arr[8] < 3 || arr.includes(0))
@@ -65,10 +73,13 @@ const YAKU = {
 			return [2, 4].includes(arr[parseInt(o.agari) - 1])
 		}
 	},
-	"Chuuren Poutou": {
-		"yakuman": 1,
-		"isMenzenOnly": true,
-		"check": (o) => {
+	'chuurenPoutou': {
+		'yakuman': 1,
+		'isMenzenOnly': true,
+		'en': 'Nine Gates',
+		'jp': '九連宝燈',
+		'ro': 'Chuuren Poutou',
+		'check': (o) => {
 			let i = MPSZ.indexOf(o.agari[1])
 			let arr = o.haiArray[i].concat()
 			if (arr[0] < 3 || arr[8] < 3 || arr.includes(0))
@@ -76,10 +87,13 @@ const YAKU = {
 			return [1, 3].includes(arr[parseInt(o.agari) - 1])
 		}
 	},
-	"Suuankou Tanki": {
-		"yakuman": 2,
-		"isMenzenOnly": true,
-		"check": (o) => {
+	'suuankouTanki': {
+		'yakuman': 2,
+		'isMenzenOnly': true,
+		'en': 'Four Concealed Triplets (Pair Wait)',
+		'jp': '四暗刻単騎',
+		'ro': 'Suuankou Tanki',
+		'check': (o) => {
 			let res = 0
 			for (let v of o.currentPattern) {
 				if (typeof v === 'string' && v !== o.agari)
@@ -90,10 +104,13 @@ const YAKU = {
 			return res === 4
 		}
 	},
-	"Suuankou": {
-		"yakuman": 1,
-		"isMenzenOnly": true,
-		"check": (o) => {
+	'suuankou': {
+		'yakuman': 1,
+		'isMenzenOnly': true,
+		'en': 'Four Concealed Triplets',
+		'jp': '四暗刻',
+		'ro': 'Suuankou',
+		'check': (o) => {
 			let res = 0
 			for (let v of o.currentPattern) {
 				if (typeof v === 'string' && v === o.agari)
@@ -104,9 +121,12 @@ const YAKU = {
 			return res === 4
 		}
 	},
-	"Daisuushii": {
-		"yakuman": 2,
-		"check": (o) => {
+	'daisuushii': {
+		'yakuman': 2,
+		'en': 'Big Four Winds',
+		'jp': '大四喜',
+		'ro': 'Daisuushii',
+		'check': (o) => {
 			let need = ['1z', '2z', '3z', '4z']
 			let res = 0
 			for (let v of o.currentPattern) {
@@ -116,9 +136,12 @@ const YAKU = {
 			return res === 4
 		}
 	},
-	"Shousuushii": {
-		"yakuman": 1,
-		"check": (o) => {
+	'shousuushii': {
+		'yakuman': 1,
+		'en': 'Little Four Winds',
+		'jp': '小四喜',
+		'ro': 'Shousuushii',
+		'check': (o) => {
 			let need = ['1z', '2z', '3z', '4z']
 			let res = 0
 			for (let v of o.currentPattern) {
@@ -130,9 +153,12 @@ const YAKU = {
 			return res === 3
 		}
 	},
-	"Daisangen": {
-		"yakuman": 1,
-		"check": (o) => {
+	'daisangen': {
+		'en': 'Big Three Dragons',
+		'jp': '大三元',
+		'yakuman': 1,
+		'ro': 'Daisangen',
+		'check': (o) => {
 			let need = ['5z', '6z', '7z']
 			let res = 0
 			for (let v of o.currentPattern) {
@@ -142,30 +168,42 @@ const YAKU = {
 			return res === 3
 		}
 	},
-	"Tsuuiisou": {
-		"yakuman": 1,
-		"check": (o) => {
+	'tsuuiisou': {
+		'yakuman': 1,
+		'en': 'All Honors',
+		'jp': '字一色',
+		'ro': 'Tsuuiisou',
+		'check': (o) => {
 			let allow = ['1z', '2z', '3z', '4z', '5z', '6z', '7z']
 			return checkAllowed(o, allow)
 		}
 	},
-	"Ryuuiisou": {
-		"yakuman": 1,
-		"check": (o) => {
+	'ryuuiisou': {
+		'yakuman': 1,
+		'en': 'All Green',
+		'jp': '緑一色',
+		'ro': 'Ryuuiisou',
+		'check': (o) => {
 			let allow = ['2s', '3s', '4s', '6s', '8s', '6z']
 			return checkAllowed(o, allow)
 		}
 	},
-	"Chinroutou": {
-		"yakuman": 1,
-		"check": (o) => {
+	'chinroutou': {
+		'yakuman': 1,
+		'en': 'All Terminals',
+		'jp': '清老頭',
+		'ro': 'Chinroutou',
+		'check': (o) => {
 			let allow = ['1m', '9m', '1p', '9p', '1s', '9s']
 			return checkAllowed(o, allow)
 		}
 	},
-	"Suukantsu": {
-		"yakuman": 1,
-		"check": (o) => {
+	'suukantsu': {
+		'yakuman': 1,
+		'en': 'Four Quads',
+		'jp': '四槓子',
+		'ro': 'Suukantsu',
+		'check': (o) => {
 			let res = 0
 			for (let v of o.currentPattern)
 				if (typeof v !== 'string' && (v.length === 2 || v.length === 4))
@@ -173,41 +211,56 @@ const YAKU = {
 			return res === 4
 		}
 	},
-	"Tenhou": {
-		"yakuman": 1,
-		"isMenzenOnly": true,
-		"check": (o) => {
+	'tenhou': {
+		'yakuman': 1,
+		'isMenzenOnly': true,
+		'en': 'Blessing of Heaven',
+		'jp': '天和',
+		'ro': 'Tenhou',
+		'check': (o) => {
 			return o.extra.includes('t') && o.isTsumo && o.isOya && !o.furo.length
 		}
 	},
-	"Chiihou": {
-		"yakuman": 1,
-		"isMenzenOnly": true,
-		"check": (o) => {
+	'chiihou': {
+		'yakuman': 1,
+		'isMenzenOnly': true,
+		'en': 'Blessing of Earth',
+		'jp': '地和',
+		'ro': 'Chiihou',
+		'check': (o) => {
 			return o.extra.includes('t') && o.isTsumo && !o.isOya && !o.furo.length
 		}
 	},
-	"Renhou": {
-		"yakuman": 1,
-		"isMenzenOnly": true,
-		"isLocal": true,
-		"check": (o) => {
+	'renhou': {
+		'yakuman': 1,
+		'isMenzenOnly': true,
+		'isLocal': true,
+		'en': 'Hand of Man',
+		'jp': '人和',
+		'ro': 'Renhou',
+		'check': (o) => {
 			return o.extra.includes('t') && !o.isTsumo && !o.isOya && !o.furo.length
 		}
 	},
-	"Daichisei": {
-		"yakuman": 1,
-		"isMenzenOnly": true,
-		"isLocal": true,
-		"check": (o) => {
+	'daichisei': {
+		'yakuman': 1,
+		'isMenzenOnly': true,
+		'isLocal': true,
+		'en': 'Big Seven Stars',
+		'jp': '大七星',
+		'ro': 'Daichisei',
+		'check': (o) => {
 			let allow = ['1z', '2z', '3z', '4z', '5z', '6z', '7z']
-			return checkAllowed(o, allow) && YAKU['Chiitoi'].check(o)
+			return checkAllowed(o, allow) && YAKU['chiitoi'].check(o)
 		}
 	},
-	"Chinitsu": {
-		"han": 6,
-		"isFuroMinus": true,
-		"check": (o) => {
+	'chinitsu': {
+		'han': 6,
+		'isFuroMinus': true,
+		'en': 'Full Flush',
+		'jp': '清一色',
+		'ro': 'Chinitsu',
+		'check': (o) => {
 			let must = o.agari[1]
 			let allow = []
 			for (let i = 1; i <= 9; i++)
@@ -215,10 +268,13 @@ const YAKU = {
 			return checkAllowed(o, allow)
 		}
 	},
-	"Honitsu": {
-		"han": 3,
-		"isFuroMinus": true,
-		"check": (o) => {
+	'honitsu': {
+		'han': 3,
+		'isFuroMinus': true,
+		'en': 'Half Flush',
+		'jp': '混一色',
+		'ro': 'Honitsu',
+		'check': (o) => {
 			let allow = ['1z', '2z', '3z', '4z', '5z', '6z', '7z']
 			let d = ''
 			for (let v of o.hai) {
@@ -241,13 +297,16 @@ const YAKU = {
 				return false
 			for (let i = 1; i <= 9; i++)
 				allow.push(i + d)
-			return checkAllowed(o, allow) && !YAKU['Chinitsu'].check(o)
+			return checkAllowed(o, allow) && !YAKU['chinitsu'].check(o)
 		}
 	},
-	"Ryanpeikou": {
-		"han": 3,
-		"isMenzenOnly": true,
-		"check": (o) => {
+	'ryanpeikou': {
+		'han': 3,
+		'isMenzenOnly': true,
+		'en': 'Twice Pure Double Sequence',
+		'jp': '二盃口',
+		'ro': 'Ryanpeikou',
+		'check': (o) => {
 			let arr = []
 			for (let v of o.currentPattern) {
 				if (typeof v === 'string')
@@ -259,25 +318,34 @@ const YAKU = {
 			return arr[0] + arr[2] === arr[1] + arr[3]
 		}
 	},
-	"Junchan": {
-		"han": 3,
-		"isFuroMinus": true,
-		"check": (o) => {
+	'junchan': {
+		'han': 3,
+		'isFuroMinus': true,
+		'en': 'Fully Outside Hand',
+		'jp': '純全帯么九',
+		'ro': 'Junchan',
+		'check': (o) => {
 			let allow = ['1m', '9m', '1p', '9p', '1s', '9s']
 			return checkChanta(o, allow)
 		}
 	},
-	"Chanta": {
-		"han": 2,
-		"isFuroMinus": true,
-		"check": (o) => {
+	'chanta': {
+		'han': 2,
+		'isFuroMinus': true,
+		'en': 'Half Outside Hand',
+		'jp': '全帯',
+		'ro': 'Chanta',
+		'check': (o) => {
 			let allow = ['1m', '9m', '1p', '9p', '1s', '9s', '1z', '2z', '3z', '4z', '5z', '6z', '7z']
-			return checkChanta(o, allow) && !YAKU['Junchan'].check(o)
+			return checkChanta(o, allow) && !YAKU['junchan'].check(o)
 		}
 	},
-	"Toitoi": {
-		"han": 2,
-		"check": (o) => {
+	'toitoi': {
+		'han': 2,
+		'en': 'All Triplets',
+		'jp': '対々和',
+		'ro': 'Toitoi',
+		'check': (o) => {
 			let res = 0
 			for (let v of o.currentPattern)
 				if (v.length === 1 || v[0] === v[1])
@@ -285,16 +353,22 @@ const YAKU = {
 			return res === 4
 		}
 	},
-	"Honroutou": {
-		"han": 2,
-		"check": (o) => {
+	'honroutou': {
+		'han': 2,
+		'en': 'All Terminals and Honors',
+		'jp': '混老頭',
+		'ro': 'Honroutou',
+		'check': (o) => {
 			let allow = ['1m', '9m', '1p', '9p', '1s', '9s', '1z', '2z', '3z', '4z', '5z', '6z', '7z']
 			return checkAllowed(o, allow)
 		}
 	},
-	"Sankantsu": {
-		"han": 2,
-		"check": (o) => {
+	'sankantsu': {
+		'han': 2,
+		'en': 'Three Quads',
+		'jp': '三槓子',
+		'ro': 'Sankantsu',
+		'check': (o) => {
 			let res = 0
 			for (let v of o.currentPattern)
 				if (typeof v !== 'string' && (v.length === 2 || v.length === 4))
@@ -302,9 +376,12 @@ const YAKU = {
 			return res === 3
 		}
 	},
-	"Shousangen": {
-		"han": 2,
-		"check": (o) => {
+	'shousangen': {
+		'han': 2,
+		'en': 'Little Three Dragons',
+		'jp': '小三元',
+		'ro': 'Shousangen',
+		'check': (o) => {
 			let need = ['5z', '6z', '7z']
 			let res = 0
 			for (let v of o.currentPattern) {
@@ -316,9 +393,12 @@ const YAKU = {
 			return res === 2
 		}
 	},
-	"Sanshoku doukou": {
-		"han": 2,
-		"check": (o) => {
+	'sanshokuDoukou': {
+		'han': 2,
+		'en': 'Triple Triplets',
+		'jp': '三色同刻',
+		'ro': 'Sanshoku Doukou',
+		'check': (o) => {
 			let res = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 			for (let v of o.currentPattern) {
 				if ((v.length === 1 || v[0] === v[1]) && !v[0].includes('z'))
@@ -329,9 +409,12 @@ const YAKU = {
 			return res.includes(3)
 		}
 	},
-	"Sanankou": {
-		"han": 2,
-		"check": (o) => {
+	'sanankou': {
+		'han': 2,
+		'en': 'Three Concealed Triplets',
+		'jp': '三暗刻',
+		'ro': 'Sanankou',
+		'check': (o) => {
 			let res = 0
 			for (let v of o.currentPattern)
 				if (typeof v !== 'string' && v.length <= 2)
@@ -339,24 +422,33 @@ const YAKU = {
 			return res === 3
 		}
 	},
-	"Chiitoi": {
-		"han": 2,
-		"isMenzenOnly": true,
-		"check": (o) => {
-			return agari.check7(o.haiArray) && !YAKU['Ryanpeikou'].check(o)
+	'chiitoi': {
+		'han': 2,
+		'en': 'Seven Pairs',
+		'jp': '七対子',
+		'ro': 'Chiitoi',
+		'isMenzenOnly': true,
+		'check': (o) => {
+			return agari.check7(o.haiArray) && !YAKU['ryanpeikou'].check(o)
 		}
 	},
-	"Double Riichi": {
-		"han": 2,
-		"isMenzenOnly": true,
-		"check": (o) => {
+	'doubleRiichi': {
+		'han': 2,
+		'isMenzenOnly': true,
+		'en': 'Double Riichi',
+		'jp': '両立直',
+		'ro': 'Daburu Riichi',
+		'check': (o) => {
 			return o.extra.includes('w') && !o.furo.length
 		}
 	},
-	"Ittsu": {
-		"han": 2,
-		"isFuroMinus": true,
-		"check": (o) => {
+	'ittsu': {
+		'han': 2,
+		'isFuroMinus': true,
+		'en': 'Pure Straight',
+		'jp': '一通',
+		'ro': 'Ittsu',
+		'check': (o) => {
 			let res = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 			for (let v of o.currentPattern) {
 				if (v.length <= 2 || v[0] === v[1])
@@ -369,10 +461,13 @@ const YAKU = {
 			return (res[0] && res[1] && res[2]) || (res[3] && res[4] && res[5]) || (res[6] && res[7] && res[8])
 		}
 	},
-	"Sanshoku Doujun": {
-		"han": 2,
-		"isFuroMinus": true,
-		"check": (o) => {
+	'sanshokuDoujun': {
+		'han': 2,
+		'isFuroMinus': true,
+		'en': 'Mixed Triple Sequence',
+		'jp': '三色同順',
+		'ro': 'Sanshoku Doujun',
+		'check': (o) => {
 			let res = [];
 			for (let v of o.currentPattern) {
 				if (v.length <= 2 || v[0] === v[1] || v[0].includes('z')) continue;
@@ -384,9 +479,12 @@ const YAKU = {
 			return res.some((value) => value.size === 3);
 		}
 	},
-	"Tanyao": {
-		"han": 1,
-		"check": (o) => {
+	'tanyao': {
+		'han': 1,
+		'en': 'All Simples',
+		'jp': '断么九',
+		'ro': 'Tanyao',
+		'check': (o) => {
 			for (let v of o.furo)
 				if (!o.allowKuitan && v.length !== 2)
 					return false
@@ -394,10 +492,13 @@ const YAKU = {
 			return checkAllowed(o, allow)
 		}
 	},
-	"Pinfu": {
-		"han": 1,
-		"isMenzenOnly": true,
-		"check": (o) => {
+	'pinfu': {
+		'han': 1,
+		'isMenzenOnly': true,
+		'en': 'All Sequences',
+		'jp': '平和',
+		'ro': 'Pinfu',
+		'check': (o) => {
 			let hasAgariFu = true
 			for (let v of o.currentPattern) {
 				if (typeof v === 'string') {
@@ -412,11 +513,14 @@ const YAKU = {
 			return !hasAgariFu
 		}
 	},
-	"Iipeikou": {
-		"han": 1,
-		"isMenzenOnly": true,
-		"check": (o) => {
-			if (YAKU['Ryanpeikou'].check(o))
+	'iipeikou': {
+		'han': 1,
+		'isMenzenOnly': true,
+		'en': 'Pure Double Sequence',
+		'jp': '一盃口',
+		'ro': 'Iipeikou',
+		'check': (o) => {
+			if (YAKU['ryanpeikou'].check(o))
 				return false
 			for (let i in o.currentPattern) {
 				i = parseInt(i)
@@ -434,30 +538,42 @@ const YAKU = {
 			return false
 		}
 	},
-	"Menzen Tsumo": {
-		"han": 1,
-		"isMenzenOnly": true,
-		"check": (o) => {
+	'menzenTsumo': {
+		'han': 1,
+		'isMenzenOnly': true,
+		'en': 'Self Draw',
+		'jp': 'ツモ',
+		'ro': 'Tsumo',
+		'check': (o) => {
 			return o.isTsumo
 		}
 	},
-	"Riichi": {
-		"han": 1,
-		"isMenzenOnly": true,
-		"check": (o) => {
-			return (YAKU['Ippatsu'].check(o) || (o.extra.includes('r') || o.extra.includes('l'))) && !YAKU['Double Riichi'].check(o)
+	'riichi': {
+		'han': 1,
+		'isMenzenOnly': true,
+		'en': 'Riichi',
+		'jp': '立直',
+		'ro': 'Riichi',
+		'check': (o) => {
+			return (YAKU['ippatsu'].check(o) || (o.extra.includes('r') || o.extra.includes('l'))) && !YAKU['doubleRiichi'].check(o)
 		}
 	},
-	"Ippatsu": {
-		"han": 1,
-		"isMenzenOnly": true,
-		"check": (o) => {
+	'ippatsu': {
+		'han': 1,
+		'isMenzenOnly': true,
+		'en': 'Ippatsu',
+		'jp': '一発',
+		'ro': 'Ippatsu',
+		'check': (o) => {
 			return o.extra.includes('i') || o.extra.includes('y')
 		}
 	},
-	"Rinshan Kaihou": {
-		"han": 1,
-		"check": (o) => {
+	'rinshanKaihou': {
+		'han': 1,
+		'en': 'After a Kan',
+		'jp': '嶺上開花',
+		'ro': 'Rinshan Kaihou',
+		'check': (o) => {
 			let hasKantsu = false
 			for (let v of o.furo) {
 				if (v.length === 2 || v.length === 4) {
@@ -465,96 +581,132 @@ const YAKU = {
 					break
 				}
 			}
-			return hasKantsu && o.extra.includes('k') && !o.extra.includes('h') && o.isTsumo && !YAKU['Ippatsu'].check(o)
+			return hasKantsu && o.extra.includes('k') && !o.extra.includes('h') && o.isTsumo && !YAKU['ippatsu'].check(o)
 		}
 	},
-	"Chankan": {
-		"han": 1,
-		"check": (o) => {
+	'chankan': {
+		'han': 1,
+		'en': 'Robbing a Kan',
+		'jp': '搶槓',
+		'ro': 'Chankan',
+		'check': (o) => {
 			return o.extra.includes('k') && !o.extra.includes('h') && !o.isTsumo
 		}
 	},
-	"Haitei Raoyue": {
-		"han": 1,
-		"check": (o) => {
+	'haiteiRaoyue': {
+		'han': 1,
+		'en': 'Under the Sea',
+		'jp': '海底撈月',
+		'ro': 'Haitei Raoyue',
+		'check': (o) => {
 			return o.extra.includes('h') && o.isTsumo
 		}
 	},
-	"Houtei Raoyui": {
-		"han": 1,
-		"check": (o) => {
-			return o.extra.includes('h') && !o.isTsumo && !YAKU['Ippatsu'].check(o)
+	'houteiRaoyui': {
+		'han': 1,
+		'en': 'Under the River',
+		'jp': '河底撈魚',
+		'ro': 'Houtei Raoyui',
+		'check': (o) => {
+			return o.extra.includes('h') && !o.isTsumo && !YAKU['ippatsu'].check(o)
 		}
 	},
-	"East (Prevalent Wind)": {
-		"han": 1,
-		"check": (o) => {
+	'prevalentEast': {
+		'han': 1,
+		'en': 'Prevalent Wind',
+		'jp': '場風 東',
+		'ro': 'Bakaze Ton',
+		'check': (o) => {
 			return o.bakaze === 1 && checkYakuhai(o, 1)
 		}
 	},
-	"South (Prevalent Wind)": {
-		"han": 1,
-		"check": (o) => {
+	'prevalentSouth': {
+		'han': 1,
+		'en': 'Prevalent Wind',
+		'jp': '場風 南',
+		'ro': 'Bakaze Nan',
+		'check': (o) => {
 			return o.bakaze === 2 && checkYakuhai(o, 2)
 		}
 	},
-	"West (Prevalent Wind)": {
-		"han": 1,
-		"check": (o) => {
+	'prevalentWest': {
+		'han': 1,
+		'en': 'Prevalent Wind',
+		'jp': '場風 西',
+		'ro': 'Bakaze Shaa',
+		'check': (o) => {
 			return o.bakaze === 3 && checkYakuhai(o, 3)
 		}
 	},
-	"North (Prevalent Wind)": {
-		"han": 1,
-		"check": (o) => {
+	'prevalentNorth': {
+		'han': 1,
+		'en': 'Prevalent Wind',
+		'jp': '場風 北',
+		'ro': 'Bakaze Pei',
+		'check': (o) => {
 			return o.bakaze === 4 && checkYakuhai(o, 4)
 		}
 	},
-	"East (Seat Wind)": {
-		"han": 1,
-		"check": (o) => {
+	'seatEast': {
+		'han': 1,
+		'en': 'Seat Wind',
+		'jp': '自風 東',
+		'ro': 'Jikaze Ton',
+		'check': (o) => {
 			return o.jikaze === 1 && checkYakuhai(o, 1)
 		}
 	},
-	"South (Seat Wind)": {
-		"han": 1,
-		"check": (o) => {
+	'seatSouth': {
+		'han': 1,
+		'en': 'Seat Wind',
+		'jp': '自風 南',
+		'ro': 'Jikaze Nan',
+		'check': (o) => {
 			return o.jikaze === 2 && checkYakuhai(o, 2)
 		}
 	},
-	"West (Seat Wind)": {
-		"han": 1,
-		"check": (o) => {
+	'seatWest': {
+		'han': 1,
+		'en': 'Seat Wind',
+		'jp': '自風 西',
+		'ro': 'Jikaze Shaa',
+		'check': (o) => {
 			return o.jikaze === 3 && checkYakuhai(o, 3)
 		}
 	},
-	"North (Seat Wind)": {
-		"han": 1,
-		"check": (o) => {
+	'seatNorth': {
+		'han': 1,
+		'en': 'Seat Wind',
+		'jp': '自風 北',
+		'ro': 'Jikaze Pei',
+		'check': (o) => {
 			return o.jikaze === 4 && checkYakuhai(o, 4)
 		}
 	},
-	"White Dragon": {
-		"han": 1,
-		"check": (o) => {
+	'whiteDragon': {
+		'han': 1,
+		'en': 'White Dragon',
+		'jp': '役牌 白',
+		'ro': 'Yakuhai Haku',
+		'check': (o) => {
 			return checkYakuhai(o, 5)
 		}
 	},
-	"Green Dragon": {
-		"han": 1,
-		"check": (o) => {
+	'greenDragon': {
+		'han': 1,
+		'en': 'Green Dragon',
+		'jp': '役牌 發',
+		'ro': 'Yakuhai Hatsu',
+		'check': (o) => {
 			return checkYakuhai(o, 6)
 		}
 	},
-	"Red Dragon": {
-		"han": 1,
-		"check": (o) => {
-			return checkYakuhai(o, 7)
-		}
-	},
-	"Red Dragon": {
-		"han": 1,
-		"check": (o) => {
+	'redDragon': {
+		'han': 1,
+		'en': 'Red Dragon',
+		'jp': '役牌 中',
+		'ro': 'Yakuhai Chun',
+		'check': (o) => {
 			return checkYakuhai(o, 7)
 		}
 	},
